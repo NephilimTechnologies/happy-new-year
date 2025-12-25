@@ -10,16 +10,47 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #1d2671, #c33764);
+      background: radial-gradient(circle at top, #1b1f3b, #090a1a);
       color: #fff;
-      text-align: center;
       min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .container {
-      padding: 30px 15px;
-      max-width: 450px;
-      margin: auto;
+      width: 95%;
+      max-width: 420px;
+      padding: 25px 18px;
+      text-align: center;
+      position: relative;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    /* ===== Animated Border ===== */
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      background: linear-gradient(
+        270deg,
+        #ff0080,
+        #ffeb3b,
+        #00e5ff,
+        #9c27b0,
+        #ff0080
+      );
+      background-size: 400% 400%;
+      animation: borderGlow 8s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes borderGlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 400% 50%; }
     }
 
     h1 {
@@ -28,32 +59,32 @@
     }
 
     h2 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: normal;
       opacity: 0.9;
     }
 
     .countdown {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       margin: 20px 0;
       font-weight: bold;
       color: #ffeb3b;
     }
 
     .card {
-      background: rgba(255,255,255,0.15);
+      margin-top: 20px;
+      padding: 18px;
       border-radius: 15px;
-      padding: 20px;
-      margin-top: 25px;
+      background: rgba(0, 0, 0, 0.35);
+      position: relative;
     }
 
     input {
-      width: 90%;
+      width: 92%;
       padding: 12px;
       border-radius: 8px;
       border: none;
       font-size: 1rem;
-      margin-top: 10px;
       outline: none;
     }
 
@@ -64,24 +95,24 @@
       border-radius: 8px;
       border: none;
       font-size: 1rem;
-      background: #25D366;
-      color: #fff;
       font-weight: bold;
+      background: linear-gradient(45deg, #25D366, #128C7E);
+      color: white;
       cursor: pointer;
     }
 
     button:hover {
-      opacity: 0.9;
+      transform: scale(1.03);
     }
 
     .message {
-      margin-top: 20px;
-      font-size: 1.2rem;
+      margin-top: 18px;
+      font-size: 1.15rem;
       line-height: 1.5;
     }
 
     footer {
-      margin-top: 35px;
+      margin-top: 28px;
       font-size: 0.85rem;
       opacity: 0.8;
     }
@@ -106,18 +137,16 @@
     </div>
 
     <footer>
-      🎊 Wishing you a joyful, successful & blessed New Year 🎊
+      🎊 Wishing you joy, success & blessings in the New Year 🎊
     </footer>
   </div>
 
   <script>
-    /* =====================
-       NEW YEAR COUNTDOWN
-    ====================== */
+    /* ===== Countdown ===== */
     function updateCountdown() {
       const now = new Date();
-      const nextYear = now.getFullYear() + 1;
-      const newYear = new Date(`January 1, ${nextYear} 00:00:00`);
+      const year = now.getFullYear() + 1;
+      const newYear = new Date(`January 1, ${year} 00:00:00`);
       const diff = newYear - now;
 
       if (diff <= 0) {
@@ -126,35 +155,30 @@
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
 
       document.getElementById("countdown").innerHTML =
-        `${days}d ${hours}h ${minutes}m ${seconds}s to New Year 🎆`;
+        `${d}d ${h}h ${m}m ${s}s to New Year 🎆`;
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    /* =====================
-       READ NAME FROM URL
-    ====================== */
+    /* ===== Read URL Parameter ===== */
     const params = new URLSearchParams(window.location.search);
-    const fromName = params.get("from");
+    const from = params.get("from");
 
-    if (fromName) {
+    if (from) {
       document.getElementById("personalMessage").innerHTML =
-        `🎉 <strong>${fromName}</strong> is wishing you a joyful, successful and blessed New Year 🎆`;
+        `🎉 <strong>${from}</strong> is wishing you a joyful, successful and blessed New Year 🎆`;
     }
 
-    /* =====================
-       WHATSAPP SHARE
-    ====================== */
+    /* ===== WhatsApp Share ===== */
     function shareOnWhatsApp() {
       const name = document.getElementById("nameInput").value.trim();
-
       if (!name) {
         alert("Please enter your name");
         return;
@@ -165,7 +189,6 @@
         window.location.pathname +
         `?from=${encodeURIComponent(name)}`;
 
-      // CLEAN WhatsApp message (NO personal name here)
       const message =
         `🎉 Happy New Year! 🎆
 
@@ -174,12 +197,12 @@ Tap the link below to see it 👇
 
 ${link}`;
 
-      const whatsappURL =
-        "https://wa.me/?text=" + encodeURIComponent(message);
-
-      window.open(whatsappURL, "_blank");
+      window.open(
+        "https://wa.me/?text=" + encodeURIComponent(message),
+        "_blank"
+      );
     }
   </script>
 
 </body>
-</html>
+  </html>
