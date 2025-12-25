@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy New Year 🎉</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #ffd700;
+    }
+
+    .countdown {
+      font-size: 2rem;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #25D366;
+      color: white;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎄 Welcome Back!</h1>
+  <h2>From the Christmas Celebrations 🎉</h2>
+
+  <div class="countdown" id="countdown">
+    Loading countdown...
+  </div>
+
+  <div class="card">
+    <p>Enter your name to wish others a Happy New Year 🎆</p>
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <br/>
+    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+
+    <div class="message" id="customMessage"></div>
+  </div>
+
+  <footer>
+    🎊 Wishing you joy, success & blessings in the New Year 🎊
+  </footer>
+
+  <script>
+    // 🎯 Countdown to New Year
+    function updateCountdown() {
+      const now = new Date();
+      const year = now.getFullYear() + 1;
+      const newYear = new Date(`January 1, ${year} 00:00:00`);
+      const diff = newYear - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML =
+          "🎉 Happy New Year! 🎉";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("countdown").innerHTML =
+        `${days}d ${hours}h ${minutes}m ${seconds}s to New Year 🎆`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // 🎯 Read name from URL
+    const params = new URLSearchParams(window.location.search);
+    const fromName = params.get("from");
+
+    if (fromName) {
+      document.getElementById("customMessage").innerHTML =
+        `🎉 <strong>${fromName}</strong> wishes you a Happy New Year! 🎆<br/>
+         May this year bring joy, success and blessings.`;
+    }
+
+    // 🎯 Share on WhatsApp
+    function shareOnWhatsApp() {
+      const name = document.getElementById("nameInput").value.trim();
+
+      if (!name) {
+        alert("Please enter your name");
+        return;
+      }
+
+      const link =
+        window.location.origin +
+        window.location.pathname +
+        `?from=${encodeURIComponent(name)}`;
+
+      const message =
+        `🎉 Happy New Year! 🎆\n\n${name} is wishing you a joyful, successful and blessed New Year.\n\nSee the message here 👇\n${link}`;
+
+      const whatsappUrl =
+        "https://wa.me/?text=" + encodeURIComponent(message);
+
+      window.open(whatsappUrl, "_blank");
+    }
+  </script>
+
+</body>
+  </html>
