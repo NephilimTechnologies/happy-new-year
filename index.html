@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Happy New Year 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1d2671, #c33764);
       color: #fff;
       text-align: center;
-      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      padding: 30px 15px;
+      max-width: 450px;
+      margin: auto;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+      font-size: 2.3rem;
+      margin-bottom: 5px;
     }
 
     h2 {
-      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: normal;
+      opacity: 0.9;
     }
 
     .countdown {
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin: 20px 0;
       font-weight: bold;
+      color: #ffeb3b;
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.15);
+      border-radius: 15px;
       padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      margin: 20px auto;
+      margin-top: 25px;
     }
 
     input {
       width: 90%;
       padding: 12px;
-      font-size: 1rem;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
+      font-size: 1rem;
       margin-top: 10px;
+      outline: none;
     }
 
     button {
+      width: 100%;
       margin-top: 15px;
-      padding: 12px 20px;
-      font-size: 1rem;
+      padding: 12px;
+      border-radius: 8px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      font-size: 1rem;
       background: #25D366;
-      color: white;
+      color: #fff;
       font-weight: bold;
+      cursor: pointer;
     }
 
     button:hover {
@@ -66,43 +77,47 @@
     .message {
       margin-top: 20px;
       font-size: 1.2rem;
+      line-height: 1.5;
     }
 
     footer {
-      margin-top: 40px;
-      font-size: 0.9rem;
+      margin-top: 35px;
+      font-size: 0.85rem;
       opacity: 0.8;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎄 Welcome Back!</h1>
-  <h2>From the Christmas Celebrations 🎉</h2>
+  <div class="container">
+    <h1>🎄 Welcome Back!</h1>
+    <h2>From the Christmas Celebrations 🎉</h2>
 
-  <div class="countdown" id="countdown">
-    Loading countdown...
+    <div class="countdown" id="countdown">Loading...</div>
+
+    <div class="card">
+      <p>Enter your name to send a New Year wish 🎆</p>
+
+      <input type="text" id="nameInput" placeholder="Enter your name">
+
+      <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+
+      <div class="message" id="personalMessage"></div>
+    </div>
+
+    <footer>
+      🎊 Wishing you a joyful, successful & blessed New Year 🎊
+    </footer>
   </div>
-
-  <div class="card">
-    <p>Enter your name to wish others a Happy New Year 🎆</p>
-    <input type="text" id="nameInput" placeholder="Enter your name" />
-    <br/>
-    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
-
-    <div class="message" id="customMessage"></div>
-  </div>
-
-  <footer>
-    🎊 Wishing you joy, success & blessings in the New Year 🎊
-  </footer>
 
   <script>
-    // 🎯 Countdown to New Year
+    /* =====================
+       NEW YEAR COUNTDOWN
+    ====================== */
     function updateCountdown() {
       const now = new Date();
-      const year = now.getFullYear() + 1;
-      const newYear = new Date(`January 1, ${year} 00:00:00`);
+      const nextYear = now.getFullYear() + 1;
+      const newYear = new Date(`January 1, ${nextYear} 00:00:00`);
       const diff = newYear - now;
 
       if (diff <= 0) {
@@ -123,17 +138,20 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // 🎯 Read name from URL
+    /* =====================
+       READ NAME FROM URL
+    ====================== */
     const params = new URLSearchParams(window.location.search);
     const fromName = params.get("from");
 
     if (fromName) {
-      document.getElementById("customMessage").innerHTML =
-        `🎉 <strong>${fromName}</strong> wishes you a Happy New Year! 🎆<br/>
-         May this year bring joy, success and blessings.`;
+      document.getElementById("personalMessage").innerHTML =
+        `🎉 <strong>${fromName}</strong> is wishing you a joyful, successful and blessed New Year 🎆`;
     }
 
-    // 🎯 Share on WhatsApp
+    /* =====================
+       WHATSAPP SHARE
+    ====================== */
     function shareOnWhatsApp() {
       const name = document.getElementById("nameInput").value.trim();
 
@@ -147,15 +165,21 @@
         window.location.pathname +
         `?from=${encodeURIComponent(name)}`;
 
+      // CLEAN WhatsApp message (NO personal name here)
       const message =
-        `🎉 Happy New Year! 🎆\n\n${name} is wishing you a joyful, successful and blessed New Year.\n\nSee the message here 👇\n${link}`;
+        `🎉 Happy New Year! 🎆
 
-      const whatsappUrl =
+I’ve sent you a special New Year message 🎁
+Tap the link below to see it 👇
+
+${link}`;
+
+      const whatsappURL =
         "https://wa.me/?text=" + encodeURIComponent(message);
 
-      window.open(whatsappUrl, "_blank");
+      window.open(whatsappURL, "_blank");
     }
   </script>
 
 </body>
-  </html>
+</html>
